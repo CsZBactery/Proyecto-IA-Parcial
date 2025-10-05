@@ -1,3 +1,21 @@
+/*
+ * =====================================================================================
+ *
+ * Filename:  VisionCone.cs
+ *
+ * Description:  Implementa la lógica de un cono de visión para un agente 3D.
+ * Detecta objetivos y se comunica con SteeringAgent para la persecución.
+ * También genera una malla visual para representar el cono.
+ *
+ * Authors:  Carlos Hernan Gonzalez Gonzales
+ * Eduardo Calderon Trejo
+ * Cesar Sasia Zayas
+ *
+ * Materia:  Inteligencia Artificial e Ingeniería del Conocimiento
+ *
+ * =====================================================================================
+ */
+
 using UnityEngine;
 
 public class VisionCone : MonoBehaviour
@@ -8,7 +26,7 @@ public class VisionCone : MonoBehaviour
     public float visionRange = 10f;
     [Range(0f, 180f)]
     public float visionAngle = 60f;
-    public LayerMask targetLayers;
+    public LayerMask targetLayers; // Capa del objetivo a detectar (ej. "Player").
     public Transform targetGameObject;
 
     [Header("Configuración Visual del Cono")]
@@ -25,12 +43,14 @@ public class VisionCone : MonoBehaviour
 
     void Awake()
     {
+        // Obtiene la referencia al script de movimiento del agente.
         steeringAgent = agentTransform.GetComponent<SteeringAgent>();
         if (steeringAgent == null)
         {
             Debug.LogWarning("VisionCone: Script 'SteeringAgent' no encontrado en 'agentTransform'.");
         }
 
+        // Prepara los componentes para dibujar la malla del cono.
         meshFilter = GetComponent<MeshFilter>();
         if (meshFilter == null) { meshFilter = gameObject.AddComponent<MeshFilter>(); }
         meshRenderer = GetComponent<MeshRenderer>();
@@ -50,13 +70,14 @@ public class VisionCone : MonoBehaviour
         DetectTarget();
         UpdateVisionConeVisuals();
 
+        // Comunica el resultado de la detección al script de movimiento.
         if (targetIsDetected && targetGameObject != null && steeringAgent != null)
         {
-            steeringAgent.target = targetGameObject;
+            steeringAgent.target = targetGameObject; // Le asigna el objetivo.
         }
         else if (steeringAgent != null)
         {
-            steeringAgent.target = null;
+            steeringAgent.target = null; // Le quita el objetivo para que se detenga.
         }
     }
 
@@ -65,17 +86,20 @@ public class VisionCone : MonoBehaviour
         targetIsDetected = false;
         targetGameObject = null;
 
+        // 1. Detección por radio: encuentra todos los colliders en un área.
         Collider[] hitColliders = Physics.OverlapSphere(agentTransform.position, visionRange, targetLayers);
 
         foreach (var hitCollider in hitColliders)
         {
             if (hitCollider.gameObject == agentTransform.gameObject) continue;
 
+            // 2. Detección por ángulo: comprueba si el objeto está dentro del cono.
             Vector3 directionToTarget = (hitCollider.transform.position - agentTransform.position).normalized;
             float angleToTarget = Vector3.Angle(agentTransform.forward, directionToTarget);
 
             if (angleToTarget < visionAngle)
             {
+                // 3. Detección por línea de visión: lanza un rayo para ver si hay paredes en medio.
                 RaycastHit hit;
                 if (Physics.Raycast(agentTransform.position, directionToTarget, out hit, visionRange, targetLayers | (1 << LayerMask.NameToLayer("Obstacle"))))
                 {
@@ -91,6 +115,7 @@ public class VisionCone : MonoBehaviour
         UpdateVisionMeshColor(targetIsDetected ? targetDetectedColor : noTargetColor);
     }
 
+    // Genera la malla 3D (en el plano XZ) para el cono de visión.
     private void UpdateVisionConeVisuals()
     {
         visionMesh.Clear();
@@ -127,4 +152,17 @@ public class VisionCone : MonoBehaviour
             meshRenderer.material.color = color;
         }
     }
+
+    /*
+     * ================================================================
+     * CONSULTAS A IA
+     * ================================================================
+     * 1. ¿Cómo se puede generar una malla (Mesh) en Unity mediante código para visualizar un área?
+     * - Se consultó el proceso de definir `vértices` y `triángulos` para construir una forma
+     * geométrica y asignarla a un `MeshFilter`.
+     * 2. ¿Cuál es la forma correcta de combinar varias LayerMasks para un Raycast en Unity?
+     * - Se investigó el uso del operador a nivel de bits `|` (OR) para que el rayo pueda
+     * colisionar con más de una capa a la vez (ej. `targetLayers | obstacleLayer`).
+     * ================================================================
+     */
 }
