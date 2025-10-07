@@ -28,7 +28,7 @@ public class HeavyEnemy : BaseEnemy
         rb = GetComponent<Rigidbody>();
 
         // B) Encuentra al jugador al iniciar para perseguirlo siempre.
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player = GameObject.FindGameObjectWithTag("PLAYER");
         if (player != null)
         {
             playerTransform = player.transform;
