@@ -3,7 +3,8 @@
  *
  * Filename:  Projectile.cs
  *
- * Description:  Define el comportamiento de un proyectil, detectando colisiones y destruyéndose.
+ * Description:  Define el comportamiento de un proyectil, detectando colisiones,
+ * infligiendo daño y destruyéndose al impactar o tras cierto tiempo.
  *
  * Authors:  Carlos Hernan Gonzalez Gonzales
  * Eduardo Calderon Trejo
@@ -15,47 +16,46 @@
  */
 
 using UnityEngine;
-
 public class Projectile : MonoBehaviour
 {
+    [Header("Damage Settings")]
+    [Tooltip("Daño infligido por el proyectil.")]
+    public int damage = 25;
+
+    [Header("Lifetime Settings")]
+    [Tooltip("Tiempo de vida del proyectil si no colisiona.")]
+    public float lifetime = 3f;
+
+    void Start()
+    {
+        // Si no colisiona con nada en 'lifetime' segundos, se destruye.
+        Destroy(gameObject, lifetime);
+    }
+
     // Función de Unity que se llama automáticamente cuando este objeto colisiona con otro.
     void OnCollisionEnter(Collision collision)
     {
-        bool shouldDestroy = false;
-
         // Comprueba si el objeto impactado tiene el Tag "Enemy".
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("ENEMY"))
         {
-            // Intenta obtener el script BaseEnemy del enemigo.
             BaseEnemy enemy = collision.gameObject.GetComponent<BaseEnemy>();
             if (enemy != null)
             {
-                // Si lo encuentra, le inflige daño.
-                enemy.TakeDamage(25);
+                enemy.TakeDamage(damage);
             }
-            shouldDestroy = true;
         }
-        // Si no, comprueba si es un obstáculo destructible.
+        // Comprueba si es un obstáculo destructible.
         else if (collision.gameObject.CompareTag("Destructible"))
         {
             DestructibleObstacle obstacle = collision.gameObject.GetComponent<DestructibleObstacle>();
             if (obstacle != null)
             {
-                obstacle.TakeDamage(25);
+                obstacle.TakeDamage(damage);
             }
-            shouldDestroy = true;
-        }
-        // Si no, comprueba si es una pared normal.
-        else if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            shouldDestroy = true;
         }
 
-        // Si se cumplió alguna de las condiciones, la bala se destruye para no seguir infinitamente.
-        if (shouldDestroy)
-        {
-            DestroyBullet();
-        }
+        // En cualquier caso, el proyectil se destruye inmediatamente.
+        DestroyBullet();
     }
 
     void DestroyBullet()
