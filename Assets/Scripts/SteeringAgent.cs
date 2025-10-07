@@ -71,7 +71,7 @@ public class SteeringAgent : MonoBehaviour
                     primaryForce = Flee(target.position);
                     break;
                 case Behavior.Pursuit:
-                    primaryForce = (targetRb != null) ? Pursuit(target.position, targetRb.velocity) : Seek(target.position);
+                    primaryForce = (targetRb != null) ? Pursuit(target.position, targetRb.linearVelocity) : Seek(target.position);
                     break;
             }
 
@@ -87,7 +87,7 @@ public class SteeringAgent : MonoBehaviour
         else
         {
             // Si no hay objetivo, el agente se frena gradualmente.
-            rb.velocity *= friction;
+            rb.linearVelocity *= friction;
         }
     }
 
@@ -97,7 +97,7 @@ public class SteeringAgent : MonoBehaviour
     private Vector3 Seek(Vector3 targetPosition)
     {
         Vector3 desiredVelocity = (targetPosition - transform.position).normalized * maxSpeed;
-        Vector3 steeringForce = desiredVelocity - rb.velocity;
+        Vector3 steeringForce = desiredVelocity - rb.linearVelocity;
         return Vector3.ClampMagnitude(steeringForce, maxForce);
     }
 
@@ -105,7 +105,7 @@ public class SteeringAgent : MonoBehaviour
     private Vector3 Flee(Vector3 targetPosition)
     {
         Vector3 desiredVelocity = (transform.position - targetPosition).normalized * maxSpeed;
-        Vector3 steeringForce = desiredVelocity - rb.velocity;
+        Vector3 steeringForce = desiredVelocity - rb.linearVelocity;
         return Vector3.ClampMagnitude(steeringForce, maxForce);
     }
 
@@ -137,17 +137,17 @@ public class SteeringAgent : MonoBehaviour
 
     private void LimitSpeed()
     {
-        if (rb.velocity.magnitude > maxSpeed)
+        if (rb.linearVelocity.magnitude > maxSpeed)
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
         }
     }
 
     private void ApplyRotation()
     {
-        if (rb.velocity.magnitude > 0.1f)
+        if (rb.linearVelocity.magnitude > 0.1f)
         {
-            Quaternion lookRotation = Quaternion.LookRotation(rb.velocity);
+            Quaternion lookRotation = Quaternion.LookRotation(rb.linearVelocity);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
         }
     }
