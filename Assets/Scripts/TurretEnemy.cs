@@ -50,7 +50,7 @@ public class TurretEnemy : BaseEnemy
     protected override void Awake()
     {
         base.Awake(); // Ejecuta la lógica de vida y efectos de BaseEnemy.
-        playerTransform = GameObject.FindGameObjectWithTag("PLAYER")?.transform;
+        playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         // Si hay un script para el cono visual, le pasamos los parámetros.
         if (visionConeMesh != null)

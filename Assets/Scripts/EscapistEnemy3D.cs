@@ -64,7 +64,7 @@ public class EscapistEnemy3D : BaseEnemy
         base.Awake();
         rb = GetComponent<Rigidbody>();
 
-        GameObject player = GameObject.FindGameObjectWithTag("PLAYER");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             playerTransform = player.transform;

@@ -4,9 +4,12 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Destructible
+  - Enemy
+  - Obstacle
+  - OSBTACLE
   - PLAYER
   - ENEMY
-  - OSBTACLE
   layers:
   - Default
   - TransparentFX
@@ -18,8 +21,8 @@ TagManager:
   - Player
   - Obstacle
   - Enemy
-  - 
-  - 
+  - PlayerBullet
+  - EnemyBullet
   - 
   - 
   - 

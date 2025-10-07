@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // Comprueba si el objeto impactado tiene el Tag "Enemy".
-        if (collision.gameObject.CompareTag("ENEMY"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             BaseEnemy enemy = collision.gameObject.GetComponent<BaseEnemy>();
             if (enemy != null)

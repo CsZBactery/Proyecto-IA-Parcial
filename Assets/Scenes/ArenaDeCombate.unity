@@ -245,8 +245,12 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3136820629370392942, guid: 62dcba975a0bdfe47bef48ea43049412, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136820629370392942, guid: 62dcba975a0bdfe47bef48ea43049412, type: 3}
       propertyPath: m_TagString
-      value: PLAYER
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3190320679450232660, guid: 62dcba975a0bdfe47bef48ea43049412, type: 3}
       propertyPath: m_Layer
@@ -473,7 +477,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  bulletPrefab: {fileID: 1834049336235359673, guid: e1cc23bf3b91b2d42b950c3ff073d6be, type: 3}
+  bulletPrefab: {fileID: 1834049336235359673, guid: 1fa9705e2398fe844b872d5650bdfe8b, type: 3}
   firePoint: {fileID: 1782948911}
   bulletForce: 20
   maxHealth: 100
@@ -788,7 +792,7 @@ MonoBehaviour:
   patrolRotationAngle: 120
   patrolRotationSpeed: 30
   patrolPauseDuration: 2
-  bulletPrefab: {fileID: 1834049336235359673, guid: e1cc23bf3b91b2d42b950c3ff073d6be, type: 3}
+  bulletPrefab: {fileID: 1834049336235359673, guid: f96527c57ebcc4e41870e8fffcae9a33, type: 3}
   firePoint: {fileID: 1953813889}
   fireRate: 1
   bulletForce: 20
@@ -807,7 +811,7 @@ GameObject:
   - component: {fileID: 504371954}
   m_Layer: 8
   m_Name: Pared (5)
-  m_TagString: OSBTACLE
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1124,7 +1128,7 @@ GameObject:
   - component: {fileID: 881287933}
   m_Layer: 8
   m_Name: Pared
-  m_TagString: OSBTACLE
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1399,8 +1403,12 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 8b753cd7277b22448a827f90e6efe768, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8b753cd7277b22448a827f90e6efe768, type: 3}
       propertyPath: m_TagString
-      value: ENEMY
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: 8b753cd7277b22448a827f90e6efe768, type: 3}
       propertyPath: m_Layer
@@ -1742,7 +1750,7 @@ MonoBehaviour:
   restDuration: 3
   accelerationForce: 50
   maxSpeed: 4
-  bulletPrefab: {fileID: 1834049336235359673, guid: e1cc23bf3b91b2d42b950c3ff073d6be, type: 3}
+  bulletPrefab: {fileID: 1834049336235359673, guid: f96527c57ebcc4e41870e8fffcae9a33, type: 3}
   firePoint: {fileID: 708116677}
   fireRate: 1.5
   shotPredictionTime: 0.5
@@ -4017,8 +4025,12 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e4c88fe2e81511d4dae9da620550ecf9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e4c88fe2e81511d4dae9da620550ecf9, type: 3}
       propertyPath: m_TagString
-      value: ENEMY
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 928133776547823031, guid: e4c88fe2e81511d4dae9da620550ecf9, type: 3}
       propertyPath: m_Layer
@@ -5966,7 +5978,7 @@ GameObject:
   - component: {fileID: 1345565090}
   m_Layer: 8
   m_Name: Pared (2)
-  m_TagString: OSBTACLE
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6216,7 +6228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ea2c92e12cb4e45b3b69306400ae2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentTransform: {fileID: 904342682}
+  agentTransform: {fileID: 1491981395}
   visionRange: 10
   visionAngle: 60
   targetLayers:
@@ -6240,7 +6252,7 @@ GameObject:
   - component: {fileID: 1578776229}
   m_Layer: 8
   m_Name: Pared (4)
-  m_TagString: OSBTACLE
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6394,6 +6406,134 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 641461844}
   m_SourcePrefab: {fileID: 100100000, guid: 23e2a639ca3c8bb43ba7ae9988ecc0e4, type: 3}
+--- !u!1001 &1693138548
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 9.525715
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 11.927842
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5.2073
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.6474736
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.42818967
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.47714928
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.41201964
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -71.383
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -56.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904959823963481817, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -23.036
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481487113836053001, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_Name
+      value: shield_wood
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481487113836053001, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481487113836053001, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7481487113836053001, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      propertyPath: m_TagString
+      value: Destructible
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7481487113836053001, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1693138551}
+    - targetCorrespondingSourceObject: {fileID: 7481487113836053001, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1693138550}
+  m_SourcePrefab: {fileID: 100100000, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+--- !u!1 &1693138549 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7481487113836053001, guid: 8533b4b7d25cfea40a34848f200ce0e0, type: 3}
+  m_PrefabInstance: {fileID: 1693138548}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1693138550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693138549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9115dbd77af82e428729a31e98f56d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 30
+  destructionEffectPrefab: {fileID: 0}
+  flashDuration: 0.1
+--- !u!65 &1693138551
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693138549}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.45165876, y: 0.15778911, z: 0.5652045}
+  m_Center: {x: -0.0013158086, y: -0.054521084, z: 0.027848382}
 --- !u!1 &1716168318
 GameObject:
   m_ObjectHideFlags: 0
@@ -6408,7 +6548,7 @@ GameObject:
   - component: {fileID: 1716168319}
   m_Layer: 8
   m_Name: Pared (1)
-  m_TagString: OSBTACLE
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6516,7 +6656,7 @@ GameObject:
   - component: {fileID: 1772315566}
   m_Layer: 8
   m_Name: Pared (6)
-  m_TagString: OSBTACLE
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6850,8 +6990,12 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: cfbfb95b5f2b90949be0b5faab2775fb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cfbfb95b5f2b90949be0b5faab2775fb, type: 3}
       propertyPath: m_TagString
-      value: ENEMY
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 1262250383720426611, guid: cfbfb95b5f2b90949be0b5faab2775fb, type: 3}
       propertyPath: m_Layer
@@ -7189,7 +7333,7 @@ GameObject:
   - component: {fileID: 2137522588}
   m_Layer: 8
   m_Name: Pared (3)
-  m_TagString: OSBTACLE
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7304,3 +7448,4 @@ SceneRoots:
   - {fileID: 908919067}
   - {fileID: 1900865913}
   - {fileID: 1311162124}
+  - {fileID: 1693138548}
