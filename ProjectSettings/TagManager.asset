@@ -7,9 +7,6 @@ TagManager:
   - Destructible
   - Enemy
   - Obstacle
-  - OSBTACLE
-  - PLAYER
-  - ENEMY
   layers:
   - Default
   - TransparentFX

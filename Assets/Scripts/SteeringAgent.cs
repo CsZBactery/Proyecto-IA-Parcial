@@ -71,7 +71,21 @@ public class SteeringAgent : MonoBehaviour
                     primaryForce = Flee(target.position);
                     break;
                 case Behavior.Pursuit:
-                    primaryForce = (targetRb != null) ? Pursuit(target.position, targetRb.linearVelocity) : Seek(target.position);
+                    // --- NUEVA LÓGICA DE PURSUIT DINÁMICO ---
+                    if (currentBehavior == Behavior.Pursuit && targetRb != null)
+                    {
+                        // Calcula cuánto tiempo le tomará al agente llegar al objetivo.
+                        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+                        float dynamicPredictionTime = distanceToTarget / maxSpeed; // Tiempo = Distancia / Velocidad
+
+                        // Usa ese tiempo dinámico para la predicción.
+                        primaryForce = Pursuit(target.position, targetRb.linearVelocity, dynamicPredictionTime);
+                    }
+                    else
+                    {
+                        // Si no es Pursuit, usa la lógica normal.
+                        primaryForce = Seek(target.position);
+                    }
                     break;
             }
 
@@ -110,7 +124,7 @@ public class SteeringAgent : MonoBehaviour
     }
 
     // Calcula la fuerza para interceptar un objetivo en movimiento.
-    private Vector3 Pursuit(Vector3 targetPosition, Vector3 targetVelocity)
+    private Vector3 Pursuit(Vector3 targetPosition, Vector3 targetVelocity, float predictionTime)
     {
         // Predice la posición futura sumando la velocidad actual del objetivo multiplicada por un tiempo.
         Vector3 futurePosition = targetPosition + (targetVelocity * predictionTime);
@@ -137,10 +151,7 @@ public class SteeringAgent : MonoBehaviour
 
     private void LimitSpeed()
     {
-        if (rb.linearVelocity.magnitude > maxSpeed)
-        {
-            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
-        }
+        rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, maxSpeed);
     }
 
     private void ApplyRotation()
@@ -149,6 +160,33 @@ public class SteeringAgent : MonoBehaviour
         {
             Quaternion lookRotation = Quaternion.LookRotation(rb.linearVelocity);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            if (target == null) return;
+
+            // Dibuja una línea azul para la velocidad actual
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, transform.position + rb.linearVelocity);
+
+            // Si está en modo Pursuit, dibuja una esfera en la posición futura predicha
+            if (currentBehavior == Behavior.Pursuit && targetRb != null)
+            {
+                float time = Vector3.Distance(transform.position, target.position) / maxSpeed;
+                Vector3 futurePosition = target.position + (targetRb.linearVelocity * time);
+
+                Gizmos.color = Color.magenta;
+                Gizmos.DrawWireSphere(futurePosition, 0.5f);
+                Gizmos.DrawLine(transform.position, futurePosition); // Línea hacia el punto de intercepción
+            }
+
+            // Dibuja el rayo de detección de obstáculos
+            if (canAvoidObstacles)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(transform.position, transform.position + rb.linearVelocity.normalized * obstacleDetectionDistance);
+            }
         }
     }
 

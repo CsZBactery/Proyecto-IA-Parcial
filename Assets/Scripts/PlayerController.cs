@@ -90,8 +90,12 @@ public class PlayerController : MonoBehaviour
         // Crea una nueva instancia de la bala (prefab) en la posición y rotación del 'FirePoint'.
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-        // Aplica una fuerza a la bala en la dirección hacia donde está apuntando el 'FirePoint'.
-        bulletRb.AddForce(firePoint.forward * bulletForce, ForceMode.Impulse);
+        if (bulletRb != null)
+        {
+            // Aplica una fuerza a la bala en la dirección hacia donde está apuntando el 'FirePoint'.
+            bulletRb.AddForce(firePoint.forward * bulletForce, ForceMode.Impulse);
+        }
+
     }
 
     // Función pública para que otros scripts (como el de la bala enemiga o el contacto del enemigo) puedan hacerle daño.

@@ -73,7 +73,7 @@ public class BaseEnemy : MonoBehaviour
     protected virtual void OnCollisionEnter(Collision collision)
     {
         // Si choca con el jugador, le hace daño.
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if (player != null)
