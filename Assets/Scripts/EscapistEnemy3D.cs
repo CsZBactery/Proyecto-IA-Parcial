@@ -1,34 +1,56 @@
+/*
+ * =====================================================================================
+ *
+ * Filename:  EscapistEnemy3D.cs
+ *
+ * Description:  Implementa un enemigo que huye del jugador, esquiva obstáculos y dispara
+ * de forma predictiva, todo en un ciclo de actividad y descanso.
+ *
+ * Authors:  Carlos Hernan Gonzalez Gonzales
+ * Eduardo Calderon Trejo
+ * Cesar Sasia Zayas
+ *
+ * Materia:  Inteligencia Artificial e Ingeniería del Conocimiento
+ *
+ * =====================================================================================
+ */
+
 using System.Collections;
 using UnityEngine;
 
 // Heredamos de BaseEnemy para tener vida y poder morir.
 public class EscapistEnemy3D : BaseEnemy
 {
+    // A) Ciclo de Huida y Descanso
     [Header("Flee & Rest Cycle")]
-    [Tooltip("Segundos que el enemigo pasar� huyendo.")]
+    [Tooltip("Segundos que el enemigo pasará huyendo.")]
     public float fleeDuration = 5f;
-    [Tooltip("Segundos que el enemigo se detendr� a descansar.")]
+    [Tooltip("Segundos que el enemigo se detendrá a descansar.")]
     public float restDuration = 3f;
 
+    // C) Movimiento "Ligero"
     [Header("Movement Settings")]
-    [Tooltip("Aceleraci�n alta para un movimiento �gil.")]
+    [Tooltip("Aceleración alta para un movimiento ágil.")]
     public float accelerationForce = 50f;
-    [Tooltip("Velocidad m�xima baja para que no se aleje demasiado.")]
+    [Tooltip("Velocidad máxima baja para que no se aleje demasiado.")]
     public float maxSpeed = 4f;
 
+    // B) Disparo Predictivo
     [Header("Shooting Behavior")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float fireRate = 1.5f; // Disparos por segundo
-    [Tooltip("Qu� tan en el futuro intentar� predecir la posici�n del jugador para disparar.")]
+    [Tooltip("Qué tan en el futuro intentará predecir la posición del jugador para disparar.")]
     public float shotPredictionTime = 0.5f;
+    public float bulletSpeed = 20f; // Velocidad de la bala
 
+    // D) Esquivar Obstáculos
     [Header("Obstacle Avoidance")]
-    [Tooltip("Distancia a la que detectar� obst�culos para esquivarlos.")]
+    [Tooltip("Distancia a la que detectará obstáculos para esquivarlos.")]
     public float obstacleDetectionDistance = 2f;
-    [Tooltip("Fuerza con la que evitar� los obst�culos.")]
+    [Tooltip("Fuerza con la que evitará los obstáculos.")]
     public float obstacleAvoidanceForce = 100f;
-    public LayerMask obstacleLayer;
+    public LayerMask obstacleLayer; // La capa donde se encuentran los obstáculos (ej. "Obstacle")
 
     private Rigidbody rb;
     private Transform playerTransform;
@@ -58,27 +80,30 @@ public class EscapistEnemy3D : BaseEnemy
 
     private void FixedUpdate()
     {
+        // Solo aplica las fuerzas de movimiento si está en el estado "Fleeing".
         if (currentState == State.Fleeing)
         {
             ApplyMovementForces();
         }
     }
 
+    // A) Corutina que controla el ciclo de huir y descansar.
     private IEnumerator FleeAndRestCycle()
     {
-        while (true)
+        while (true) // Este ciclo se repetirá infinitamente.
         {
-            // Fase de huida
+            // Fase de Huida
             currentState = State.Fleeing;
             yield return new WaitForSeconds(fleeDuration);
 
-            // Fase de descanso
+            // Fase de Descanso
             currentState = State.Resting;
-            rb.linearVelocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero; // Detiene al enemigo por completo.
             yield return new WaitForSeconds(restDuration);
         }
     }
 
+    // B) Corutina que controla el disparo, es independiente del ciclo de movimiento.
     private IEnumerator ShootingCycle()
     {
         yield return new WaitForSeconds(1f);
@@ -97,46 +122,61 @@ public class EscapistEnemy3D : BaseEnemy
     {
         if (playerTransform == null) return;
 
-        // --- Fuerza principal: huir ---
-        Vector3 fleeDirection = (transform.position - playerTransform.position).normalized;
+        // --- Fuerza Principal: Huir (Flee) ---
+        // Se calcula en el plano XZ ignorando la altura.
+        Vector3 fleeDirection = transform.position - playerTransform.position;
+        fleeDirection.y = 0; // CAMBIO: Ignorar la diferencia de altura para el movimiento.
+        fleeDirection.Normalize();
 
-        // --- Esquivar obst�culos ---
+        // --- Fuerza Secundaria: Esquivar Obstáculos (Obstacle Avoidance) ---
         Vector3 avoidanceDirection = Vector3.zero;
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, rb.linearVelocity.normalized, out hit, obstacleDetectionDistance, obstacleLayer))
+        // CAMBIO: El rayo debe lanzarse en la dirección del movimiento, no del "forward" del modelo.
+        // Y solo si el enemigo se está moviendo.
+        if (rb.linearVelocity.magnitude > 0.1f && Physics.Raycast(transform.position, rb.linearVelocity.normalized, out hit, obstacleDetectionDistance, obstacleLayer))
         {
-            // Calcula una direcci�n perpendicular al obst�culo
-            avoidanceDirection = Vector3.Cross(hit.normal, Vector3.up).normalized;
+            // Calcula una dirección perpendicular al obstáculo en el plano XZ.
+            avoidanceDirection = Vector3.Cross(hit.normal, Vector3.up);
+
+            // CAMBIO: Asegurarse de que la dirección de evasión no apunte hacia el jugador.
+            // Esto evita que el enemigo esquive una pared corriendo hacia el jugador.
+            float dot = Vector3.Dot(avoidanceDirection, -fleeDirection);
+            if (dot < 0)
+            {
+                avoidanceDirection *= -1;
+            }
         }
 
-        // --- Aplica la fuerza combinada ---
+        // --- Combinamos las fuerzas y aplicamos el movimiento ---
         Vector3 finalForce = (fleeDirection * accelerationForce) + (avoidanceDirection * obstacleAvoidanceForce);
-        rb.AddForce(finalForce * Time.fixedDeltaTime, ForceMode.Acceleration);
+        rb.AddForce(finalForce); // CAMBIO: No multiplicar por Time.fixedDeltaTime aquí, AddForce ya lo considera.
 
-        // --- Limita la velocidad m�xima ---
+        // --- Limita la velocidad máxima ---
         if (rb.linearVelocity.magnitude > maxSpeed)
         {
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
         }
 
-        // --- Rota para mirar en la direcci�n del movimiento ---
+        // --- Rota para mirar en la dirección del movimiento ---
         if (rb.linearVelocity.sqrMagnitude > 0.1f)
         {
-            Quaternion targetRot = Quaternion.LookRotation(rb.linearVelocity.normalized, Vector3.up);
+            Quaternion targetRot = Quaternion.LookRotation(rb.linearVelocity.normalized);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 5f);
         }
     }
 
     private void ShootPredictive()
     {
-        // Predice la posici�n futura del jugador
+        if (playerRb == null) return; // No se puede predecir sin el Rigidbody del jugador.
+
+        // Predice la posición futura del jugador en 3D.
         Vector3 futurePosition = playerTransform.position + (playerRb.linearVelocity * shotPredictionTime);
         Vector3 aimDirection = (futurePosition - firePoint.position).normalized;
 
-        // Crea la bala y dispara
+        // Crea la bala y dispara en 3D.
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(aimDirection));
         Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-        bulletRb.AddForce(aimDirection * 20f, ForceMode.Impulse);
+        bulletRb.AddForce(aimDirection * bulletSpeed, ForceMode.Impulse);
     }
 }
