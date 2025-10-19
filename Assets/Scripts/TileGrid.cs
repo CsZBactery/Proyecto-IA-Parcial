@@ -3,35 +3,35 @@
  *
  * Filename:  TileGrid.cs
  *
- * Description:  Crea y gestiona una cuadrícula de nodos para pathfinding.
- * Ahora incluye la implementación del algoritmo Breadth-First Search (BFS).
+ * Description:  Crea y gestiona una cuadrícula de nodos, implementa el algoritmo BFS
+ * y visualiza el camino encontrado.
  *
- * Authors:  Carlos Hernan
-             Eduardo Calderon
-             Cesar Sasia
+ * Authors:  Carlos Hernan Gonzalez Gonzales
+ * Eduardo Calderon Trejo
+ * Cesar Sasia Zayas
  *
  * =====================================================================================
  */
 
 using UnityEngine;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 
 public class TileGrid : MonoBehaviour
 {
     [Header("Grid Settings")]
     public Vector2 gridWorldSize;
     public float nodeRadius;
-    private Node[,] grid; // La cuadrícula 2D de nodos
+    private Node[,] grid;
 
     private float nodeDiameter;
     private int gridSizeX, gridSizeY;
 
     [Header("Pathfinding Objects")]
-    public Transform start; // Objeto que marca el inicio
-    public Transform target; // Objeto que marca el final
-    public LineRenderer pathRenderer; // Referencia al Line Renderer para dibujar en el juego
+    public Transform start;
+    public Transform target;
+    public LineRenderer pathRenderer; 
 
-    private List<Node> finalPath; // Lista para guardar el camino encontrado
+    private List<Node> finalPath;
 
     void Awake()
     {
@@ -57,7 +57,6 @@ public class TileGrid : MonoBehaviour
             for (int y = 0; y < gridSizeY; y++)
             {
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
-                // Usa una Layer "Obstacle" para los muros
                 bool walkable = !Physics.CheckSphere(worldPoint, nodeRadius, LayerMask.GetMask("Obstacle"));
                 grid[x, y] = new Node(walkable, worldPoint, x, y);
             }
@@ -76,9 +75,7 @@ public class TileGrid : MonoBehaviour
         return grid[x, y];
     }
 
-    // ================================================================
     // a) Implementación de Breadth-First Search (BFS)
-    // ================================================================
     void FindPath(Vector3 startPos, Vector3 targetPos)
     {
         Node startNode = NodeFromWorldPoint(startPos);
@@ -96,13 +93,13 @@ public class TileGrid : MonoBehaviour
         while (frontier.Count > 0)
         {
             Node currentNode = frontier.Dequeue();
-
             if (currentNode == targetNode)
             {
                 pathFound = true;
                 break;
             }
 
+            // Revisa los 8 vecinos del nodo actual
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
@@ -135,13 +132,10 @@ public class TileGrid : MonoBehaviour
             finalPath = null;
         }
 
-        // d) Llama a la función para dibujar el camino en la pantalla de Play.
         DrawPathInGame();
     }
 
-    // ================================================================
     // c) Imprimir el camino en el orden correcto
-    // ================================================================
     void RetracePath(Node startNode, Node endNode)
     {
         List<Node> path = new List<Node>();
@@ -153,12 +147,9 @@ public class TileGrid : MonoBehaviour
             currentNode = currentNode.parent;
         }
         path.Add(startNode);
-
-        // Invierte la lista para que el camino vaya del inicio al final.
         path.Reverse();
         finalPath = path;
 
-        // Imprime el camino en la consola para verificación.
         string pathString = "Camino encontrado: ";
         foreach (Node node in finalPath)
         {
@@ -167,42 +158,28 @@ public class TileGrid : MonoBehaviour
         Debug.Log(pathString + "Llegó!");
     }
 
-    // ================================================================
-    // d) Visualización del camino en la pantalla de Play
-    // ================================================================
+    
     void DrawPathInGame()
     {
-        // Si no hay un Line Renderer asignado en el Inspector, no hace nada.
         if (pathRenderer == null) return;
-
-        // Si se encontró un camino y tiene al menos un nodo...
         if (finalPath != null && finalPath.Count > 0)
         {
-            // Le decimos al Line Renderer cuántos puntos tendrá la línea.
             pathRenderer.positionCount = finalPath.Count;
-
-            // Recorremos cada nodo del camino y asignamos su posición a la línea.
             for (int i = 0; i < finalPath.Count; i++)
             {
-                // Añadimos un pequeño offset vertical (Y) para que la línea se dibuje
-                // ligeramente por encima del suelo y no parpadee (Z-fighting).
                 pathRenderer.SetPosition(i, finalPath[i].worldPosition + Vector3.up * 0.1f);
             }
         }
         else
         {
-            // Si no hay camino, "apagamos" la línea poniéndole 0 puntos.
             pathRenderer.positionCount = 0;
         }
     }
 
-    // ================================================================
-    // d) Visualización con Gizmos en el Editor
-    // ================================================================
+    // d) Visualización con Gizmos
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
-
         if (grid != null)
         {
             foreach (Node n in grid)
@@ -211,16 +188,13 @@ public class TileGrid : MonoBehaviour
                 Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .1f));
             }
         }
-
         if (finalPath != null)
         {
             Gizmos.color = Color.cyan;
             for (int i = 0; i < finalPath.Count - 1; i++)
             {
                 Gizmos.DrawLine(finalPath[i].worldPosition, finalPath[i + 1].worldPosition);
-                Gizmos.DrawCube(finalPath[i].worldPosition, Vector3.one * (nodeDiameter - .1f));
             }
-            Gizmos.DrawCube(finalPath[finalPath.Count - 1].worldPosition, Vector3.one * (nodeDiameter - .1f));
         }
     }
 
@@ -228,15 +202,13 @@ public class TileGrid : MonoBehaviour
      * ================================================================
      * CONSULTAS A IA
      * ================================================================
-     * 1. ¿Cómo se implementa BFS en C# para encontrar un camino?
-     * - Se consultó el uso de `Queue<T>` para manejar la frontera de nodos y `HashSet<T>` para
-     * registrar los nodos ya visitados de forma eficiente.
-     * 2. ¿Cómo reconstruyo un camino desde un nodo final hasta el inicio?
-     * - Se investigó el método de seguir los punteros `parent` de cada nodo hacia atrás
-     * y luego usar `List.Reverse()` para obtener el camino en el orden correcto.
-     * 3. ¿Cómo puedo dibujar una línea en la vista de juego (Game View) de Unity?
-     * - Se investigó el uso del componente `Line Renderer` y cómo actualizar sus puntos
-     * (`positionCount` y `SetPosition`) mediante un script.
+     * 1. ¿Cuál es la estructura de datos ideal para implementar BFS?
+     * - Se consultó el uso de `Queue<T>` para manejar la frontera de nodos.
+     * 2. ¿Cómo reconstruir el camino del BFS en el orden correcto?
+     * - Se investigó el método de seguir los punteros `parent` hacia atrás y luego
+     * usar `List.Reverse()` para obtener la ruta de inicio a fin.
+     * 3. ¿Cómo visualizar una ruta en la pantalla de juego de Unity?
+     * - Se investigó el uso del componente `Line Renderer` y cómo actualizar sus puntos.
      * ================================================================
      */
 }
