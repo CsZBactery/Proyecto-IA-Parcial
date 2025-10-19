@@ -1,0 +1,35 @@
+/*
+ * =====================================================================================
+ *
+ * Filename:  Node.cs
+ *
+ * Description:  Representa un único nodo o "baldosa" en la cuadrícula de pathfinding.
+ * Contiene información sobre su posición, si es caminable y su relación
+ * con otros nodos para reconstruir el camino.
+ *
+ * Authors:  Carlos Hernan Gonzalez Gonzalez
+             Eduardo Calderon Trejo
+             Cesar Sasia Zayas
+ *
+ * =====================================================================================
+ */
+
+using UnityEngine;
+
+public class Node
+{
+    public bool walkable;       //  Caminar sobre este nodo
+    public Vector3 worldPosition; // La posición del nodo en el mundo 3D.
+    public int gridX;           // La coordenada X  en la cuadrícula.
+    public int gridY;           // La coordenada Y  en la cuadrícula.
+
+    public Node parent; // El nodo desde el cual llegamos a  reconstruir el camino.
+
+    public Node(bool _walkable, Vector3 _worldPos, int _gridX, int _gridY)
+    {
+        walkable = _walkable;
+        worldPosition = _worldPos;
+        gridX = _gridX;
+        gridY = _gridY;
+    }
+}
