@@ -6,7 +6,7 @@
  * Description:  Crea y gestiona una cuadrícula de nodos, implementa el algoritmo BFS
  * y visualiza el camino encontrado.
  *
- * Authors:  Carlos Hernan Gonzalez Gonzales
+ * Authors:  Carlos Hernan Gonzalez Gonzalez
  * Eduardo Calderon Trejo
  * Cesar Sasia Zayas
  *

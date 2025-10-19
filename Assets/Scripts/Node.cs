@@ -5,7 +5,7 @@
  *
  * Description:  Representa un único nodo o "baldosa" en la cuadrícula de pathfinding.
  *
- * Authors:  Carlos Hernan Gonzalez Gonzales
+ * Authors:  Carlos Hernan Gonzalez Gonzalez
  * Eduardo Calderon Trejo
  * Cesar Sasia Zayas
  *
