@@ -200,20 +200,36 @@ public class Pathfinding : MonoBehaviour
         Debug.Log(pathString + "Llegó!");
     }
 
-    // d) Visualización en la pantalla de Play (Puntos Extra)
+    // d) Visualización en la pantalla con LineRenderer
     void DrawPathInGame()
     {
+        // Asegurarnos de que el LineRenderer exista.
         if (pathLineRenderer == null) return;
+
+        // Si hay un camino calculado...
         if (_pathToGoal != null && _pathToGoal.Count > 0)
         {
+            // Ajustamos el número de puntos del LineRenderer al tamaño del camino.
             pathLineRenderer.positionCount = _pathToGoal.Count;
+
+            // Recorremos cada nodo del camino para establecer la posición en el LineRenderer.
             for (int i = 0; i < _pathToGoal.Count; i++)
             {
-                pathLineRenderer.SetPosition(i, new Vector3(_pathToGoal[i].X, 0.1f, -_pathToGoal[i].Y));
+                // 1. Obtenemos el nodo actual del camino.
+                Node currentNode = _pathToGoal[i];
+
+                // 2. Creamos la posición en el mundo a partir de las coordenadas X, Y del nodo.
+                //    Usamos la misma lógica que en OnDrawGizmos para que coincidan.
+                //    El Vector3.up * 0.1f es para elevar la línea ligeramente sobre el suelo.
+                Vector3 worldPosition = new Vector3(currentNode.X, 0.1f, -currentNode.Y);
+
+                // 3. Establecemos la posición en el LineRenderer usando la variable correcta.
+                pathLineRenderer.SetPosition(i, worldPosition);
             }
         }
         else
         {
+            // Si no se encontró un camino, borramos la línea.
             pathLineRenderer.positionCount = 0;
         }
     }
